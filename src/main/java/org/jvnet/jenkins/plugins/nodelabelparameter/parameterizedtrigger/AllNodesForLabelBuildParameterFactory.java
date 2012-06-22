@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
+import hudson.model.Computer;
 import hudson.model.Hudson;
 import hudson.model.Node;
 import hudson.model.TaskListener;
@@ -43,7 +44,10 @@ public class AllNodesForLabelBuildParameterFactory extends AbstractBuildParamete
             params.add(new NodeLabelBuildParameter(name, labelExpanded));
         } else {
             for(Node node : nodes) {
-                params.add(new NodeLabelBuildParameter(name, node.getNodeName()));
+                Computer c = node.toComputer();
+                if(c.isOnline() && c.getNumExecutors()>0) {
+                    params.add(new NodeLabelBuildParameter(name, node.getNodeName()));
+                }
             }
         }
 
@@ -59,6 +63,4 @@ public class AllNodesForLabelBuildParameterFactory extends AbstractBuildParamete
             return Messages.AllNodesForLabelBuildParameterFactory_displayName();
         }
     }
-
-
 }

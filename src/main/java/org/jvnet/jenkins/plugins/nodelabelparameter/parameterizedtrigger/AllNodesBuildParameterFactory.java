@@ -27,10 +27,10 @@ public class AllNodesBuildParameterFactory extends AbstractBuildParameterFactory
 
     @Override
     public List<AbstractBuildParameters> getParameters(AbstractBuild<?, ?> build, TaskListener listener) {
-        Computer[] nodes = Jenkins.getInstance().getComputers();
+        Computer[] comps = Jenkins.getInstance().getComputers();
 
         List<AbstractBuildParameters> params = Lists.newArrayList();
-        for(Computer c : nodes) {
+        for(Computer c : comps) {
             Node n = c.getNode();
             if (n!=null && c.isOnline() && c.getNumExecutors()>0)
                 params.add(new NodeLabelBuildParameter("label",

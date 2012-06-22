@@ -3,11 +3,13 @@ package org.jvnet.jenkins.plugins.nodelabelparameter.parameterizedtrigger;
 import com.google.common.collect.Iterables;
 import hudson.EnvVars;
 import hudson.model.AbstractBuild;
+import hudson.model.Computer;
 import hudson.model.Hudson;
 import hudson.model.Label;
 import hudson.model.Node;
 import hudson.model.TaskListener;
 import hudson.plugins.parameterizedtrigger.AbstractBuildParameters;
+import jenkins.model.Jenkins;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -73,8 +75,15 @@ public class AllNodesForLabelBuildParameterFactoryUnitTest {
     }
 
     private Node createNodeWithName(String name) {
-        Node node = mock(Node.class);
+        Node node = PowerMockito.mock(Node.class);
         when(node.getNodeName()).thenReturn(name);
+
+        Computer comp = PowerMockito.mock(Computer.class);
+        when(comp.isOffline()).thenReturn(false);
+        when(comp.getNumExecutors()).thenReturn(1);
+
+        when(node.toComputer()).thenReturn(comp);
+
         return node;
     }
 
